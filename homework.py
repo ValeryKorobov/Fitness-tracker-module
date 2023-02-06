@@ -5,36 +5,36 @@ from typing import ClassVar
 
 @dataclass
 class InfoMessage:
-    """Информационное сообщение о тренировке."""
+    """Informational message about the workout."""
     training_type: str
     duration: float
     distance: float
     speed: float
     calories: float
-    info: list[str, float] = ('Тип тренировки: {training_type};'
-                              ' Длительность: {duration:.3f} ч.;'
-                              ' Дистанция: {distance:.3f} км;'
-                              ' Ср. скорость: {speed:.3f} км/ч;'
-                              ' Потрачено ккал: {calories:.3f}.')
+    info: list[str, float] = ('Workout type: {training_type};'
+                              ' Duration: {duration:.3f} ч.;'
+                              ' Distance: {distance:.3f} км;'
+                              ' Average speed: {speed:.3f} км/ч;'
+                              ' Calories burned: {calories:.3f}.')
 
     def get_message(self) -> str:
-        """Получить результат в виде сообщения.
+        """Get the result as a message.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            info (list[str, float]): Описание и результаты
-            пройденных тренировок.
+            info (list[str, float]): Description and results
+            of completed trainings.
 
         Returns:
-            str: Распакованный словарь с результатами тренировок.
+            str: Unpacked dictionary with training results.
             """
         return self.info.format(**asdict(self))
 
 
 @dataclass
 class Training:
-    """Базовый класс тренировки."""
+    """Base training class."""
     action: int
     duration: float
     weight: float
@@ -45,65 +45,65 @@ class Training:
     LEN_STEP: ClassVar[float] = 0.65
 
     def get_distance(self) -> float:
-        """Возвращает пройденную дистанцию в километрах.
+        """Returns the distance traveled in kilometers.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            action (int): Расстояние, пройденное за тренировку.
+            action (int): Distance traveled per workout.
 
-            duration (float): Время тренировки.
+            duration (float): Workout time.
 
-            weight (float): Вес человека.
+            weight (float): Human weight.
 
-            LEN_STEP (float): Длина шага человека.
+            LEN_STEP (float): The length of a person's stride.
 
         Returns:
-            float: Пройденная дистанция в километрах.
+            float: Distance traveled in kilometers.
         """
         return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
-        """Получить среднюю скорость движения.
+        """Get average moving speed.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            get_distance() (float): Дистанция, пройденная за тренировку.
+            get_distance() (float): Distance covered per workout.
 
-            duration (float): Время тренировки.
+            duration (float): Workout time.
 
         Returns:
-            float: Средняя скорость движения в км/ч.
+            float: Average speed in km/h.
         """
         return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий.
+        """Get calories burned.
 
-        Функция для дочерних классов.
+        Function for child classes.
 
         """
         pass
 
     def show_training_info(self) -> InfoMessage:
-        """Вернуть информационное сообщение о выполненной тренировке.
+        """Return an informational message about the completed workout.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            type(self).__name__ (__class__): Имя класса.
+            type(self).__name__ (__class__): class name.
 
-            duration (float): Время тренировки.
+            duration (float): Workout time.
 
-            get_distance() (float): Дистанция, пройденная за тренировку.
+            get_distance() (float): Distance covered per workout.
 
-            get_mean_speed() (float): Средняя скорость в км/ч.
+            get_mean_speed() (float): Average speed in km/h.
 
-            get_spent_calories() (float): Затраченные калории за тренировку.
+            get_spent_calories() (float): Calories burned per workout.
 
         Returns:
-            __class__: Возвращает класс InfoMessage.
+            __class__: Returns the InfoMessage class.
         """
         return InfoMessage(type(self).__name__,
                            self.duration, self.get_distance(),
@@ -112,34 +112,34 @@ class Training:
 
 
 class Running(Training):
-    """Тренировка: бег."""
+    """Workout: running."""
     CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
     CALORIES_MEAN_SPEED_SHIFT: float = 1.79
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий.
+        """Get calories burned.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
             CALORIES_MEAN_SPEED_MULTIPLIER (float):
-            Множитель средней скорости калорий.
+            Calorie average rate multiplier.
 
             CALORIES_MEAN_SPEED_SHIFT (float):
-            Средняя скорость переменещения калорий.
+            Average rate of change of calories.
 
-            weight (float): Вес человека.
+            weight (float): Human weight.
 
-            get_mean_speed() (float): Средняя скорость в км/ч.
+            get_mean_speed() (float): Average speed in km/h.
 
-            duration (float): Время тренировки в часах.
+            duration (float): Training time in hours.
 
-            H_IN_M (int): Колчество минут в одном часе.
+            H_IN_M (int): The number of minutes in one hour.
 
-            M_IN_KM (int): Количество метров в километре.
+            M_IN_KM (int): The number of meters in a kilometer.
 
         Returns:
-            float: Колличество затраченных калорий при беге.
+            float: The number of calories burned while running.
             """
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
                 * self.get_mean_speed()
@@ -149,7 +149,7 @@ class Running(Training):
 
 
 class SportsWalking(Training):
-    """Тренировка: спортивная ходьба."""
+    """Workout: race walking."""
     CALORIES_MEAN_SPEED_MULTIPLIER: float = 0.035
     CALORIES_MEAN_SPEED_SHIFT: float = 0.029
     KM_IN_MS: float = 0.278
@@ -166,33 +166,33 @@ class SportsWalking(Training):
         self.height: float = height
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий.
+        """Get calories burned.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
             CALORIES_MEAN_SPEED_MULTIPLIER (float):
-            Множитель средней скорости калорий.
+            Calorie average rate multiplier.
 
             CALORIES_MEAN_SPEED_SHIFT (float):
-            Средняя скорость переменещения калорий.
+            Average rate of change of calories.
 
-            weight (float): Вес человека.
+            weight (float): Human weight.
 
-            get_mean_speed() (float): Средняя скорость в км/ч.
+            get_mean_speed() (float): Average speed in km/h.
 
-            KM_IN_MS (float): Колличество км/ч в м/с.
+            KM_IN_MS (float): Number of km/h in m/s.
 
-            height (float): Рост человека в сантиметрах.
+            height (float): Human height in centimeters.
 
-            duration (float): Время тренировки в часах.
+            duration (float): Training time in hours.
 
-            H_IN_M (int): Колчество минут в одном часе.
+            H_IN_M (int): Number of minutes in one hour.
 
-            SM_IN_M (int): Количество сантиметров в метре.
+            SM_IN_M (int): Number of centimeters in a meter.
 
         Returns:
-            float: Количество затраченных калорий при ходьбе.
+            float: The number of calories burned while walking.
         """
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
                 * self.weight
@@ -204,7 +204,7 @@ class SportsWalking(Training):
 
 
 class Swimming(Training):
-    """Тренировка: плавание."""
+    """Workout: swimming."""
     WEIGHT_CALORIES_MULTIPLIER: float = 1.1
     WEIGHT_CALORIES_SHIFT: int = 2
     LEN_STEP: float = 1.38
@@ -222,62 +222,62 @@ class Swimming(Training):
         self.count_pool: int = count_pool
 
     def get_distance(self) -> float:
-        """Получить расстояние в КМ.
+        """Get distance in km.
 
          Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            action (int): Расстояние, пройденное за тренировку.
+            action (int): Distance traveled per workout.
 
-            LEN_STEP (float): Длина одного гребка человека.
+            LEN_STEP (float): The length of one stroke of a person.
 
-            M_IN_KM (int): Количество метров в километре.
+            M_IN_KM (int): The number of meters in a kilometer.
 
         Returns:
-            float: Дистанция заплыва в километрах.
+            float: Swimming distance in kilometers.
         """
         return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
-        """Получить среднюю скорость движения.
+        """Get average moving speed.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
-            length_pool (float): Длина бассейна в метрах.
+            length_pool (float): Pool length in meters.
 
-            count_pool (int): Cколько раз пользователь переплыл бассейн.
+            count_pool (int): How many times the user swam across the pool.
 
-            duration (float): Время тренировки в часах.
+            duration (float): Training time in hours.
 
-            M_IN_KM (int): Количество метров в километре.
+            M_IN_KM (int): The number of meters in a kilometer.
 
         Returns:
-            float: Средняя скорость заплыва в километрах.
+            float: Average swimming speed in kilometers.
             """
         return (self.length_pool * self.count_pool / self.M_IN_KM
                 / self.duration)
 
     def get_spent_calories(self) -> float:
-        """Получить количество затраченных калорий.
+        """Get calories burned.
 
         Args:
-            self (__class__): Собственный класс.
+            self (__class__): Own class.
 
             WEIGHT_CALORIES_MULTIPLIER (float):
-            Множитель веса калорий.
+            Calorie weight multiplier.
 
             WEIGHT_CALORIES_SHIFT (float):
-            Смещение калорий.
+            Calorie offset.
 
-            weight (float): Вес человека.
+            weight (float): Human weight.
 
-            get_mean_speed() (float): Средняя скорость в км/ч.
+            get_mean_speed() (float): Average speed in km/h.
 
-            duration (float): Время тренировки в часах.
+            duration (float): Training time in hours.
 
         Returns:
-            float: Количество затраченных калорий при плавании.
+            float: Number of calories burned while swimming.
             """
         return ((self.get_mean_speed() + self.WEIGHT_CALORIES_MULTIPLIER)
                 * self.WEIGHT_CALORIES_SHIFT
@@ -285,36 +285,36 @@ class Swimming(Training):
 
 
 def read_package(workout_type: str, data: list) -> Training:
-    """Прочитать данные полученные от датчиков.
-    Проверяет в словаре тип тренировки и если он
-    там существует, создает экземпляр класса и
-    принимает туда параметры data (list).
+    """Read the data received from the sensors.
+    Checks the type of training in the dictionary and if it is
+    exists there, creates an instance of the class, and
+    accepts data (list) parameters there.
 
     Args:
-        workout_type (str): Тип тренировки.
+        workout_type (str): Workout type.
 
-        data (list): Параметры типа тренировки.
+        data (list): Workout Type Options.
 
     Returns:
-        __class__: Возвращает класс Training.
+        __class__: Returns the Training class.
         """
     training_mode: dict[str, type[Training]] = {'SWM': Swimming,
                                                 'RUN': Running,
                                                 'WLK': SportsWalking}
     if workout_type not in training_mode:
-        raise ValueError('Не существует такого типа тренировки')
+        raise ValueError('There is no such type of training')
     return training_mode[workout_type](*data)
 
 
 def main(training: Training) -> None:
-    """Главная функция.
+    """Main function.
 
     Args:
-        training (Training): Принимает на вход класс Training
-        c полученными данными в результате тренировки.
+        training (Training): Takes the Training class as input
+        with the data obtained as a result of training.
 
     Returns:
-        str: Печатает результат пройденной тренировки.
+        str: Prints the result of the completed workout.
         """
     info: InfoMessage = training.show_training_info()
     print(info.get_message())
